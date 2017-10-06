@@ -25,10 +25,11 @@ public class MainFrame  extends JFrame {
         init();
     }
     public void init(){
-        this.setBounds(10,10,500,500);
+        this.setBounds(10,10,500,400);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout(3,3));
+        this.setTitle("ＸＯＲ加密器");
         cp=this.getContentPane();
+        cp.setLayout(new BorderLayout(3,3));
         jpl.add(exbtn);
         jpl.add(encrybtn);
         jpl.add(jlb);
@@ -36,11 +37,11 @@ public class MainFrame  extends JFrame {
         jpl.add(clearbtn);
         jpl.add(decrybtn);
         jpl.add(exitbtn);
-        jspL.setPreferredSize(new Dimension(200,500));
-        jspR.setPreferredSize(new Dimension(200,500));
+        jspL.setPreferredSize(new Dimension(200,400));
+        jspR.setPreferredSize(new Dimension(200,400));
         jtaL.setLineWrap(true);
         jtaR.setLineWrap(true);
-//        jtaR.setEnabled(false);
+        jtaR.setEditable(false);
         cp.add(jpl,BorderLayout.CENTER);
         cp.add(jspL,BorderLayout.WEST);
         cp.add(jspR,BorderLayout.EAST);
@@ -79,10 +80,8 @@ public class MainFrame  extends JFrame {
                                 }
                             }
                             data[i] = new String(String.valueOf((char) toTen(new String(last))));
-
                         }
                         count++;
-
                     }
                     System.out.println();
                     count = 0;
@@ -129,10 +128,8 @@ public class MainFrame  extends JFrame {
                                  }
                              }
                              data[i] = new String(String.valueOf((char) toTen(new String(last))));
-
                          }
                          count++;
-
                      }
                      System.out.println();
                      count = 0;
@@ -148,8 +145,6 @@ public class MainFrame  extends JFrame {
                  System.exit(0);
              }
          });
-
-
     }
     public int toTen(String a){
         BigInteger str = new BigInteger(a, 2);
