@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigInteger;
 
 public class MainFrame  extends JFrame {
     private Container cp;
@@ -10,7 +11,7 @@ public class MainFrame  extends JFrame {
     private JButton clearbtn=new JButton("清除");
     private JButton decrybtn=new JButton("解密");
     private JButton exitbtn=new JButton("Exit");
-    private JTextField keyjtf=new JTextField("0");
+    private JTextField keyjtf=new JTextField("csie");
     private JLabel jlb=new JLabel("Key");
     private JTextArea jtaL=new JTextArea();
     private JTextArea jtaR=new JTextArea();
@@ -39,49 +40,56 @@ public class MainFrame  extends JFrame {
         jspR.setPreferredSize(new Dimension(200,500));
         jtaL.setLineWrap(true);
         jtaR.setLineWrap(true);
-        jtaR.setEnabled(false);
+//        jtaR.setEnabled(false);
         cp.add(jpl,BorderLayout.CENTER);
         cp.add(jspL,BorderLayout.WEST);
         cp.add(jspR,BorderLayout.EAST);
-        int b=55;
-        toTwo(b);
-
         exbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                jtaL.setText("The Department of Computer Science and Information Engineering, formerly the Department of Information Technology, was established in 2001. The department first offered a Master program only. In 2002, the undergraduate program was established. The Doctoral program was established in 2006. Each year the department admits about 80 undergraduates, 15 graduate students and 3 Ph.D. students.\n" +
-                        "\n");
+                jtaL.setText("The Department of Computer Science and Information Engineering, formerly the Department of Information Technology, was established in 2001. The department first offered a Master program only. In 2002, the undergraduate program was established. The Doctoral program was established in 2006. Each year the department admits about 80 undergraduates, 15 graduate students and 3 Ph.D. students.");
             }
         });
         encrybtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String str=jtaL.getText();
-                char data[]=str.toCharArray();
+                jtaR.setText("");
+                String data[]=new String[str.length()];
                 int len=data.length;
-                String key=keyjtf.getText();
-                int key2[]=new int[key.length()];
-                for(int i=0;i<key.length();i++){
-                    for(int j=0;j<key.length();j++){
-                    key2[j]= Integer.parseInt(toTwo(key.charAt(i)));
-
+                String keystr=keyjtf.getText();
+                String keydata[]=new String[keystr.length()];
+                int len2=keydata.length;
+                for(int i=0;i<len2;i++){
+                    keydata[i]= toTwo(keystr.charAt(i));
                 }
-                    System.out.println(key2[i]);}
                 for(int i=0;i<len;i++){
-                    if(i%4==0){
+                    data[i]=toTwo(str.charAt(i));
+                }
+                int  count=0;
+                for(int i=0;i<len;i++) {
+                    char last[] = data[i].toCharArray();
+                    while (count < len2) {
+                        if (i % len2 == count) {
+                            for (int j = 0; j < 8; j++) {
+                                if (last[j] == keydata[count].charAt(j)) {
+                                    last[j] = '0';
+                                } else {
+                                    last[j] = '1';
+                                }
+                            }
+                            data[i] = new String(String.valueOf((char) toTen(new String(last))));
 
-                    }else if(i%4==1){
-
-                    }else if(i%4==2){
-
-                    }else if(i%4==3){
+                        }
+                        count++;
 
                     }
-
-
-
+                    System.out.println();
+                    count = 0;
                 }
-                str=new String(data);
+                for(int i=0;i<len;i++){
+                    jtaR.append(new String(data[i]));
+                }
             }
         });
         clearbtn.addActionListener(new ActionListener() {
@@ -95,26 +103,65 @@ public class MainFrame  extends JFrame {
          decrybtn.addActionListener(new ActionListener() {
              @Override
              public void actionPerformed(ActionEvent e) {
+                 String str=jtaR.getText();
+                 jtaR.setText("");
+                 String data[]=new String[str.length()];
+                 int len=data.length;
+                 String keystr=keyjtf.getText();
+                 String keydata[]=new String[keystr.length()];
+                 int len2=keydata.length;
+                 for(int i=0;i<len2;i++){
+                     keydata[i]= toTwo(keystr.charAt(i));
+                 }
+                 for(int i=0;i<len;i++){
+                     data[i]=toTwo(str.charAt(i));
+                 }
+                 int  count=0;
+                 for(int i=0;i<len;i++) {
+                     char last[] = data[i].toCharArray();
+                     while (count < len2) {
+                         if (i % len2 == count) {
+                             for (int j = 0; j < 8; j++) {
+                                 if (last[j] == keydata[count].charAt(j)) {
+                                     last[j] = '0';
+                                 } else {
+                                     last[j] = '1';
+                                 }
+                             }
+                             data[i] = new String(String.valueOf((char) toTen(new String(last))));
+
+                         }
+                         count++;
+
+                     }
+                     System.out.println();
+                     count = 0;
+                 }
+                 for(int i=0;i<len;i++){
+                     jtaR.append(new String(data[i]));
+                 }
+             }
+         });
+         exitbtn.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
                  System.exit(0);
              }
          });
 
 
     }
-    public void toTen(int a){
-
-
-
+    public int toTen(String a){
+        BigInteger str = new BigInteger(a, 2);
+        return Integer.parseInt(str.toString());
     }
     public String toTwo(int a){
-        String str="";
-        while(a>=1){
-            if(a%2==0){
-                str+="0";
-            }else if(a%2==1){
-                str+="1";
+        String str = Integer.toBinaryString(a) ;
+        if(str.length()<8){
+            int b=8-str.length();
+            for(int i=0;i<b;i++){
+                str="0"+str;
             }
-            a=a/2;
         }
         return str;
     }
